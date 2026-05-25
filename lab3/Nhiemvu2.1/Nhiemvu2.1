@@ -1,0 +1,294 @@
+# Lab 03 - Task 2.1
+# RSA Public-Key Cryptography
+
+import base64
+
+
+# =========================
+# 1. Euclid mo rong
+# =========================
+def egcd(a, b):
+    if b == 0:
+        return a, 1, 0
+
+    g, x1, y1 = egcd(b, a % b)
+
+    x = y1
+    y = x1 - (a // b) * y1
+
+    return g, x, y
+
+
+# =========================
+# 2. Tim nghich dao modulo
+# =========================
+def mod_inverse(a, m):
+    g, x, y = egcd(a, m)
+
+    if g != 1:
+        raise ValueError("Khong ton tai nghich dao modulo")
+
+    return x % m
+
+
+# =========================
+# 3. Tao khoa RSA
+# =========================
+def tao_khoa_rsa(p, q, e):
+    n = p * q
+    phi = (p - 1) * (q - 1)
+    d = mod_inverse(e, phi)
+
+    public_key = (e, n)
+    private_key = (d, n)
+
+    return public_key, private_key, phi
+
+
+# =========================
+# 4. Ma hoa / giai ma 1 so nguyen
+# =========================
+def rsa_encrypt_number(M, key):
+    so_mu, n = key
+    return pow(M, so_mu, n)
+
+
+def rsa_decrypt_number(C, key):
+    so_mu, n = key
+    return pow(C, so_mu, n)
+
+
+# =========================
+# 5. So byte can dung de luu 1 block ciphertext
+# =========================
+def cipher_block_size(n):
+    return (n.bit_length() + 7) // 8
+
+
+# =========================
+# 6. Ma hoa chuoi sang Base64
+# Moi byte plaintext duoc ma hoa thanh 1 block RSA
+# Cach nay de hieu va phu hop voi khoa nho p1, vi ASCII < 187
+# =========================
+def rsa_encrypt_text_to_base64(text, public_key):
+    e, n = public_key
+    c_size = cipher_block_size(n)
+
+    ciphertext_bytes = b""
+
+    for b in text.encode("utf-8"):
+        if b >= n:
+            raise ValueError("Byte plaintext lon hon n, khong ma hoa duoc voi khoa nay")
+
+        c = pow(b, e, n)
+        ciphertext_bytes += c.to_bytes(c_size, "big")
+
+    return base64.b64encode(ciphertext_bytes).decode("utf-8")
+
+
+# =========================
+# 7. Giai ma Base64 ve chuoi
+# =========================
+def rsa_decrypt_base64_to_text(cipher_b64, private_key):
+    d, n = private_key
+    c_size = cipher_block_size(n)
+
+    ciphertext_bytes = base64.b64decode(cipher_b64)
+
+    if len(ciphertext_bytes) % c_size != 0:
+        raise ValueError("Ciphertext khong chia het cho kich thuoc block")
+
+    plaintext_bytes = b""
+
+    for i in range(0, len(ciphertext_bytes), c_size):
+        block = ciphertext_bytes[i:i + c_size]
+        c = int.from_bytes(block, "big")
+        m = pow(c, d, n)
+        plaintext_bytes += bytes([m])
+
+    return plaintext_bytes.decode("utf-8")
+
+
+# =========================
+# 8. Chuyen ciphertext de bai ve bytes
+# =========================
+def parse_ciphertext(s):
+    s = s.strip().replace("\n", "").replace(" ", "")
+
+    # Neu la chuoi nhi phan
+    if all(ch in "01" for ch in s):
+        return int(s, 2).to_bytes((len(s) + 7) // 8, "big"), "binary"
+
+    # Neu la chuoi hex
+    hex_chars = "0123456789abcdefABCDEF"
+    if len(s) % 2 == 0 and all(ch in hex_chars for ch in s):
+        return bytes.fromhex(s), "hex"
+
+    # Con lai xem nhu Base64
+    return base64.b64decode(s), "base64"
+
+
+# =========================
+# 9. Thu giai ma ciphertext voi 1 khoa RSA
+# =========================
+def try_decrypt_ciphertext(ciphertext_str, private_key):
+    d, n = private_key
+    c_size = cipher_block_size(n)
+
+    raw, kieu = parse_ciphertext(ciphertext_str)
+
+    if len(raw) % c_size != 0:
+        return None
+
+    plaintext_bytes = b""
+
+    for i in range(0, len(raw), c_size):
+        block = raw[i:i + c_size]
+        c = int.from_bytes(block, "big")
+
+        if c >= n:
+            return None
+
+        m = pow(c, d, n)
+
+        if m < 0 or m > 255:
+            return None
+
+        plaintext_bytes += bytes([m])
+
+    try:
+        return plaintext_bytes.decode("utf-8")
+    except UnicodeDecodeError:
+        return None
+
+
+# =========================
+# 10. Main
+# =========================
+def main():
+    # =========================
+    # Task 2.1.1 - Tao 3 bo khoa
+    # =========================
+
+    # Bo khoa 1 - he thap phan
+    p1 = 11
+    q1 = 17
+    e1 = 7
+
+    # Bo khoa 2 - he thap phan
+    p2 = 20079993872842322116151219
+    q2 = 676717145751736242170789
+    e2 = 17
+
+    # Bo khoa 3 - he thap luc phan
+    p3 = int("F7E75FDC469067FFDC4E847C51F452DF", 16)
+    q3 = int("E85CED54AF57E53E092113E62F436F4F", 16)
+    e3 = int("0D88C3", 16)
+
+    params = [
+        ("Key 1", p1, q1, e1),
+        ("Key 2", p2, q2, e2),
+        ("Key 3", p3, q3, e3)
+    ]
+
+    keys = []
+
+    print("========== TASK 2.1.1: TAO KHOA RSA ==========")
+
+    for name, p, q, e in params:
+        public_key, private_key, phi = tao_khoa_rsa(p, q, e)
+        keys.append((name, public_key, private_key))
+
+        print("\n", name)
+        print("p =", p)
+        print("q =", q)
+        print("n =", public_key[1])
+        print("phi(n) =", phi)
+        print("Public key (e, n) =", public_key)
+        print("Private key (d, n) =", private_key)
+
+    # =========================
+    # Task 2.1.2 - Ma hoa/giai ma M = 5 bang Key 1
+    # =========================
+
+    print("\n========== TASK 2.1.2: RSA VOI M = 5 ==========")
+
+    M = 5
+    key1_public = keys[0][1]
+    key1_private = keys[0][2]
+
+    # Confidentiality: encrypt public, decrypt private
+    C_conf = rsa_encrypt_number(M, key1_public)
+    M_conf_dec = rsa_decrypt_number(C_conf, key1_private)
+
+    print("\n--- Encryption for Confidentiality ---")
+    print("Plaintext M =", M)
+    print("Ciphertext C = M^e mod n =", C_conf)
+    print("Decrypted M = C^d mod n =", M_conf_dec)
+
+    # Authentication: encrypt private, decrypt public
+    C_auth = rsa_encrypt_number(M, key1_private)
+    M_auth_dec = rsa_decrypt_number(C_auth, key1_public)
+
+    print("\n--- Encryption for Authentication ---")
+    print("Plaintext M =", M)
+    print("Ciphertext C = M^d mod n =", C_auth)
+    print("Decrypted M = C^e mod n =", M_auth_dec)
+
+    # =========================
+    # Task 2.1.3 - Ma hoa chuoi va xuat Base64
+    # =========================
+
+    print("\n========== TASK 2.1.3: MA HOA CHUOI RA BASE64 ==========")
+
+    message = "The University of Information Technology"
+    print("Plaintext message:", message)
+
+    for name, public_key, private_key in keys:
+        try:
+            cipher_b64 = rsa_encrypt_text_to_base64(message, public_key)
+            print(f"\n{name}")
+            print("Ciphertext Base64:", cipher_b64)
+
+            # Giai ma lai de kiem tra
+            decrypted = rsa_decrypt_base64_to_text(cipher_b64, private_key)
+            print("Decrypted:", decrypted)
+
+        except Exception as ex:
+            print(f"\n{name}")
+            print("Khong ma hoa duoc:", ex)
+
+    # =========================
+    # Task 2.1.4 - Giai ma cac ciphertext de bai
+    # =========================
+
+    print("\n========== TASK 2.1.4: GIAI MA CIPHERTEXT DE BAI ==========")
+
+    ciphertexts = [
+        "raUcesUlOkx/8ZhgodMoo0Uu18sC20yXlQFevSu7W/FDxIy0YRHMyXcHdD9PBvIT2aUft5fCQEGomiVVPv4I",
+
+        "C87F570FC4F699CEC24020C6F54221ABAB2CE0C3",
+
+        "Z2BUSkJcg0w4XEpgm0JcMExEQmBlVH6dYEpNTHpMHptMQ7NgTHlgQrNMQ2BKTQ==",
+
+        "001010000001010011111111101101110010111011001010111011000110011110111111001111110110100011001111001100001001010001010100111101010100110011101110111011110101101100000100"
+    ]
+
+    for idx, ct in enumerate(ciphertexts, start=1):
+        print(f"\nCiphertext {idx}:")
+        found = False
+
+        for name, public_key, private_key in keys:
+            result = try_decrypt_ciphertext(ct, private_key)
+
+            if result is not None:
+                print(f"Thu bang {name}: {result}")
+                found = True
+
+        if not found:
+            print("Chua giai ma duoc bang cach tach moi byte thanh 1 block.")
+            print("Ciphertext nay co the dung cach chia block khac hoac dang ma hoa khac.")
+
+
+if __name__ == "__main__":
+    main()
