@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-
+using System.Security.Cryptography;
 using DoAnCryptoWeb;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -23,6 +22,12 @@ app.MapPost("/api/playfair/decrypt", (PlayfairRequest request) =>
         CryptoService.PlayfairDecrypt(request.Text, request.Key),
         "PlayFair: đã giải mã xong. Kết quả trả về là bản rõ đã chuẩn hóa theo PlayFair.")));
 
+app.MapPost("/api/playfair/encrypt-steps", (PlayfairRequest request) =>
+    RunCryptoAction(() => CryptoService.PlayfairEncryptDetailed(request.Text, request.Key)));
+
+app.MapPost("/api/playfair/decrypt-steps", (PlayfairRequest request) =>
+    RunCryptoAction(() => CryptoService.PlayfairDecryptDetailed(request.Text, request.Key)));
+
 app.MapPost("/api/rsa/generate", (RsaKeyRequest request) =>
     RunCryptoAction(() =>
     {
@@ -45,6 +50,87 @@ app.MapPost("/api/rsa/decrypt", (RsaCryptoRequest request) =>
         CryptoService.RsaDecrypt(request.Text, request.PrivateKey),
         "RSA: đã giải mã xong bằng khóa bí mật.")));
 
+app.MapPost("/api/rsa/inspect-key", (RsaInspectRequest request) =>
+    RunCryptoAction(() => CryptoService.InspectRsaKey(request.Key)));
+
+app.MapPost("/api/rsa/encrypt-file", async (HttpContext context) =>
+{
+    try
+    {
+        var form = await context.Request.ReadFormAsync();
+        var file = form.Files.GetFile("file");
+        var publicKey = form["publicKey"].ToString();
+
+        if (file == null || file.Length == 0)
+        {
+            return Results.BadRequest(new { error = "Vui lòng chọn file cần mã hóa." });
+        }
+
+        if (string.IsNullOrWhiteSpace(publicKey))
+        {
+            return Results.BadRequest(new { error = "Vui lòng cung cấp khóa công khai RSA." });
+        }
+
+        byte[] fileBytes;
+        using (var ms = new MemoryStream())
+        {
+            await file.CopyToAsync(ms);
+            fileBytes = ms.ToArray();
+        }
+
+        byte[] encryptedPackage = CryptoService.EncryptFileHybrid(fileBytes, publicKey);
+
+        string originalFileName = Path.GetFileNameWithoutExtension(file.FileName);
+        string downloadName = $"{originalFileName}.enc";
+
+        return Results.File(encryptedPackage, "application/octet-stream", downloadName);
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(new { error = ex.Message });
+    }
+});
+
+app.MapPost("/api/rsa/decrypt-file", async (HttpContext context) =>
+{
+    try
+    {
+        var form = await context.Request.ReadFormAsync();
+        var file = form.Files.GetFile("file");
+        var privateKey = form["privateKey"].ToString();
+
+        if (file == null || file.Length == 0)
+        {
+            return Results.BadRequest(new { error = "Vui lòng chọn file .enc cần giải mã." });
+        }
+
+        if (string.IsNullOrWhiteSpace(privateKey))
+        {
+            return Results.BadRequest(new { error = "Vui lòng cung cấp khóa bí mật RSA." });
+        }
+
+        byte[] fileBytes;
+        using (var ms = new MemoryStream())
+        {
+            await file.CopyToAsync(ms);
+            fileBytes = ms.ToArray();
+        }
+
+        byte[] decryptedData = CryptoService.DecryptFileHybrid(fileBytes, privateKey);
+
+        string originalFileName = file.FileName;
+        string downloadName = originalFileName.EndsWith(".enc", StringComparison.OrdinalIgnoreCase)
+            ? originalFileName.Substring(0, originalFileName.Length - 4)
+            : $"decrypted_{originalFileName}";
+
+        return Results.File(decryptedData, "application/octet-stream", downloadName);
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(new { error = ex.Message });
+    }
+});
+
 app.Run();
 
 static IResult RunCryptoAction<T>(Func<T> action)
@@ -62,6 +148,7 @@ static IResult RunCryptoAction<T>(Func<T> action)
 internal sealed record PlayfairRequest(string Text, string Key);
 internal sealed record RsaKeyRequest(int KeySize = 2048);
 internal sealed record RsaCryptoRequest(string Text, string PublicKey = "", string PrivateKey = "");
+internal sealed record RsaInspectRequest(string Key);
 internal sealed record CryptoResponse(string Result, string Message);
 internal sealed record RsaKeyResponse(string PublicKey, string PrivateKey, string Message);
 internal sealed record ErrorResponse(string Error);

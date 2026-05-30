@@ -1,350 +1,677 @@
-﻿<!doctype html>
-<html class="light" lang="vi">
+<!doctype html>
+<html class="dark" lang="vi">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NT101.Q22 Group07 | Ứng dụng mã hóa PlayFair và RSA</title>
+  <title>NT101.Q22 | Hệ thống Mã hóa Playfair và RSA Bảo mật</title>
+  
+  <!-- Tailwind CSS with custom styling plugins -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
-      darkMode: "class",
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
-            tertiary: "#3b1c00",
-            "surface-container-low": "#f5f3ee",
-            surface: "#fbf9f4",
-            "inverse-on-surface": "#f2f1ec",
-            "on-secondary-fixed": "#002020",
-            "on-primary-fixed": "#001c38",
-            "tertiary-fixed-dim": "#ffb77e",
-            "secondary-container": "#97f2f0",
-            outline: "#737780",
-            "on-tertiary-fixed-variant": "#6b3b0b",
-            "on-error": "#ffffff",
-            "on-secondary-container": "#00706f",
-            "outline-variant": "#c3c6d0",
-            "secondary-fixed": "#97f2f0",
-            "secondary-fixed-dim": "#7bd5d4",
-            "on-error-container": "#93000a",
-            "on-tertiary": "#ffffff",
-            "inverse-surface": "#30312e",
-            "on-surface": "#1b1c19",
-            "on-tertiary-fixed": "#2f1500",
-            "on-secondary": "#ffffff",
-            "on-primary-container": "#81a6d7",
-            "inverse-primary": "#a4c9fc",
-            "on-surface-variant": "#42474f",
-            "primary-fixed": "#d3e4ff",
-            "error-container": "#ffdad6",
-            "on-primary-fixed-variant": "#204874",
-            primary: "#002546",
-            "surface-container-lowest": "#ffffff",
-            "tertiary-container": "#5b2e00",
-            "on-secondary-fixed-variant": "#00504f",
-            "surface-dim": "#dbdad5",
-            "surface-container-high": "#eae8e3",
-            "on-primary": "#ffffff",
-            "tertiary-fixed": "#ffdcc3",
-            "surface-container-highest": "#e4e2dd",
-            "primary-fixed-dim": "#a4c9fc",
-            "on-background": "#1b1c19",
-            error: "#ba1a1a",
-            "on-tertiary-container": "#d7955f",
-            "primary-container": "#0d3b66",
-            secondary: "#006a69",
-            background: "#fbf9f4",
-            "surface-tint": "#3a608d",
-            "surface-variant": "#e4e2dd",
-            "surface-container": "#f0eee9",
-            "surface-bright": "#fbf9f4"
+            "surface-container-high": "#1e293b",
+            "surface-container": "#0f172a",
+            "surface-container-low": "#020617",
+            "cyber-bg": "#060a13",
+            "neon-cyan": "#00f2fe",
+            "neon-emerald": "#00f2a1",
+            "neon-purple": "#b927fc",
+            "neon-pink": "#ff007f",
+            slate: {
+              950: '#020617',
+              900: '#0b0f19',
+              800: '#1e293b',
+            }
           },
-          borderRadius: {
-            DEFAULT: "0.25rem",
-            lg: "0.5rem",
-            xl: "0.75rem",
-            full: "9999px"
-          },
-          spacing: {
-            "stack-lg": "3rem",
-            gutter: "1.5rem",
-            "stack-sm": "0.5rem",
-            "container-max": "1280px",
-            "stack-md": "1.5rem",
-            "edge-margin": "2rem"
-          },
-          fontFamily: {
-            "body-md": ["Be Vietnam Pro", "sans-serif"],
-            "mono-code": ["Space Grotesk", "monospace"],
-            "headline-lg": ["Be Vietnam Pro", "sans-serif"],
-            "display-xl": ["Be Vietnam Pro", "sans-serif"],
-            "body-lg": ["Be Vietnam Pro", "sans-serif"],
-            "headline-md": ["Be Vietnam Pro", "sans-serif"],
-            "label-sm": ["Inter", "sans-serif"]
-          },
-          fontSize: {
-            "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
-            "mono-code": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
-            "headline-lg": ["32px", { lineHeight: "1.3", fontWeight: "600" }],
-            "display-xl": ["48px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700" }],
-            "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
-            "headline-md": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
-            "label-sm": ["13px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500" }]
+          boxShadow: {
+            'neon-cyan': '0 0 15px rgba(0, 242, 254, 0.25)',
+            'neon-emerald': '0 0 15px rgba(0, 242, 161, 0.25)',
+            'neon-purple': '0 0 15px rgba(185, 39, 252, 0.25)',
+            'neon-glow': '0 0 20px rgba(0, 242, 254, 0.1)',
           }
         }
       }
-    };
+    }
   </script>
-  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Font and Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css?v=1.0.5">
 </head>
-<body class="bg-background font-body-md text-on-surface antialiased min-h-screen flex flex-col overflow-x-hidden">
-  <nav class="fixed top-0 w-full z-50 border-b border-white/20 bg-white/60 backdrop-blur-xl shadow-sm">
-    <div class="flex justify-between items-center px-6 md:px-8 py-4 max-w-7xl mx-auto">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-primary">encrypted</span>
-        <span class="text-xl font-bold tracking-tighter text-blue-900 font-headline-lg">NT101.Q22 Group07</span>
+<body class="bg-cyber-bg text-slate-100 antialiased min-h-screen font-['Inter'] relative overflow-x-hidden">
+
+  <!-- Background grid & glowing artifacts -->
+  <div class="cyber-grid absolute inset-0 pointer-events-none z-0 opacity-20"></div>
+  <div class="glow-orb orb-1 absolute pointer-events-none z-0"></div>
+  <div class="glow-orb orb-2 absolute pointer-events-none z-0"></div>
+  <div class="glow-orb orb-3 absolute pointer-events-none z-0"></div>
+
+  <!-- Mobile Sidebar Menu Button -->
+  <button id="menuBtn" class="menu-btn transition-all duration-300 hover:border-cyan-400/50 hover:shadow-neon-cyan" aria-label="Toggle Navigation Menu">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
+
+  <!-- Sidebar Navigation -->
+  <aside id="sidebar" class="sidebar z-50">
+    <div class="flex items-center gap-3 mb-10 px-2 mt-4">
+      <div class="p-2 rounded-xl bg-gradient-to-br from-cyan-400 to-purple-600 shadow-lg shadow-cyan-500/20 relative">
+        <span class="material-symbols-outlined text-white text-2xl font-bold block">shield_lock</span>
+        <div class="absolute -inset-1 rounded-xl bg-gradient-to-br from-cyan-400 to-purple-600 blur-sm opacity-50 -z-10"></div>
+      </div>
+      <div>
+        <h1 class="text-xl font-bold font-['Space_Grotesk'] tracking-wide text-white leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-300">NT101.Q22</h1>
+        <p class="text-[10px] text-slate-500 font-mono font-semibold uppercase tracking-widest">GROUP 07</p>
       </div>
     </div>
-  </nav>
 
-  <main class="flex-grow pt-24 pb-12 px-4 sm:px-6 max-w-7xl mx-auto w-full xl:pl-72">
-    <header class="text-center mb-stack-lg flex flex-col items-center">
-      <h1 class="font-display-xl text-4xl md:text-display-xl text-primary mb-4 leading-tight">Ứng dụng mã hóa PlayFair và RSA</h1>
-    </header>
-
-    <div class="flex justify-center mb-stack-md">
-      <div class="inline-flex glass-card p-1.5 rounded-xl border border-white/40 shadow-sm">
-        <button class="tab active flex items-center gap-2 px-6 md:px-8 py-3 rounded-lg font-semibold transition-all" data-target="playfair">
-          <span class="material-symbols-outlined">grid_view</span>
-          PlayFair
-        </button>
-        <button class="tab flex items-center gap-2 px-6 md:px-8 py-3 rounded-lg font-semibold transition-all" data-target="rsa">
-          <span class="material-symbols-outlined">enhanced_encryption</span>
-          RSA
-        </button>
-      </div>
-    </div>
-
-    <section id="playfair" class="panel active space-y-stack-md">
-      <div class="glass-card p-gutter rounded-xl flex flex-col md:flex-row justify-between md:items-center gap-4 shadow-sm">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center text-secondary">
-            <span class="material-symbols-outlined filled">grid_view</span>
-          </div>
-          <div>
-            <h2 class="font-headline-md text-headline-md text-primary">Mã hóa PlayFair cổ điển</h2>
-            <p class="text-on-surface-variant text-label-sm">Cipher định hướng ma trận 5x5</p>
-          </div>
-        </div>
-        <button class="info-button border-secondary text-secondary" data-info="playfair">
-          <span class="material-symbols-outlined text-[20px]">info</span>
-          Nguyên lý hoạt động
-        </button>
-      </div>
-
-      <div class="glass-card p-gutter rounded-xl shadow-sm border-l-4 border-l-secondary">
-        <label class="block font-label-sm text-secondary uppercase tracking-widest mb-3" for="playfairKey">Khóa PlayFair</label>
-        <input id="playfairKey" class="lab-input" placeholder="Nhập khóa (ví dụ: MONARCHY)..." type="text">
-        <p class="mt-2 text-xs text-on-surface-variant italic">Lưu ý: Các ký tự trùng lặp sẽ được loại bỏ và J được thay thế bằng I.</p>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
-        <article class="glass-card p-gutter rounded-xl shadow-sm flex flex-col gap-4 border-t border-white/50">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="material-symbols-outlined text-secondary">lock_open</span>
-            <h3 class="font-headline-md text-[20px] text-primary">Tiến trình Mã hóa</h3>
-          </div>
-          <div class="space-y-4">
-            <label class="block">
-              <span class="block text-label-sm text-on-surface-variant mb-2">Bản rõ đầu vào</span>
-              <textarea id="playfairPlain" class="lab-textarea" placeholder="Nhập văn bản cần mã hóa..." rows="4"></textarea>
-            </label>
-            <label class="block bg-secondary-container/10 p-4 rounded-lg border border-secondary/20">
-              <span class="block text-label-sm text-secondary mb-2 font-semibold">Bản mã kết quả</span>
-              <textarea id="playfairCipherOut" class="lab-textarea result secondary-result" placeholder="Kết quả mã hóa sẽ xuất hiện tại đây..." readonly rows="4"></textarea>
-            </label>
-          </div>
-          <div class="flex flex-col sm:flex-row gap-3 mt-4">
-            <button id="playfairEncrypt" class="flex-grow bg-secondary text-on-secondary py-3 rounded-lg font-semibold shadow-md hover:brightness-110 active:scale-[0.98] transition-all">Mã hóa PlayFair</button>
-            <button id="playfairMove" class="px-4 py-3 bg-surface-container-high text-on-surface rounded-lg font-medium hover:bg-surface-container-highest transition-all flex items-center justify-center gap-2">
-              <span class="material-symbols-outlined">swap_horiz</span>
-              <span class="sm:hidden">Chuyển sang giải mã</span>
-            </button>
-          </div>
-        </article>
-
-        <article class="glass-card p-gutter rounded-xl shadow-sm flex flex-col gap-4 border-t border-white/50">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="material-symbols-outlined text-on-surface-variant">key</span>
-            <h3 class="font-headline-md text-[20px] text-primary">Tiến trình Giải mã</h3>
-          </div>
-          <div class="space-y-4">
-            <label class="block">
-              <span class="block text-label-sm text-on-surface-variant mb-2">Bản mã đầu vào</span>
-              <textarea id="playfairCipherIn" class="lab-textarea" placeholder="Nhập bản mã cần giải mã..." rows="4"></textarea>
-            </label>
-            <label class="block bg-surface-container-low p-4 rounded-lg border border-outline-variant/30">
-              <span class="block text-label-sm text-on-surface-variant mb-2 font-semibold">Bản rõ giải mã</span>
-              <textarea id="playfairPlainOut" class="lab-textarea result" placeholder="Văn bản gốc sau khi giải mã..." readonly rows="4"></textarea>
-            </label>
-          </div>
-          <button id="playfairDecrypt" class="mt-4 w-full border-2 border-secondary text-secondary py-3 rounded-lg font-semibold hover:bg-secondary/5 active:scale-[0.98] transition-all">Giải mã PlayFair</button>
-        </article>
-      </div>
-
-      <div class="status-shell">
-        <div class="flex items-center gap-2 text-secondary font-medium">
-          <span class="material-symbols-outlined text-[18px]">check_circle</span>
-          <span id="playfairStatus" class="text-body-md">PlayFair: sẵn sàng xử lý.</span>
-        </div>
-        <button id="playfairClear" class="clear-button">
-          <span class="material-symbols-outlined text-[20px]">delete</span>
-          Xóa toàn bộ
-        </button>
-      </div>
-    </section>
-
-    <section id="rsa" class="panel space-y-stack-md">
-      <div class="glass-card p-gutter rounded-xl flex flex-col md:flex-row justify-between md:items-center gap-4 shadow-sm">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center text-on-primary-container">
-            <span class="material-symbols-outlined filled">enhanced_encryption</span>
-          </div>
-          <div>
-            <h2 class="font-headline-md text-headline-md text-primary">Mã hóa RSA hiện đại</h2>
-            <p class="text-on-surface-variant text-label-sm">Hệ mã hóa công khai bất đối xứng</p>
-          </div>
-        </div>
-        <button class="info-button border-primary-container text-primary-container" data-info="rsa">
-          <span class="material-symbols-outlined text-[20px]">info</span>
-          Nguyên lý hoạt động
-        </button>
-      </div>
-
-      <article class="glass-card p-gutter rounded-xl shadow-sm border-l-4 border-l-primary-container">
-        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 mb-6">
-          <div>
-            <h3 class="font-headline-md text-[20px] text-primary">Quản lý khóa</h3>
-            <p class="text-on-surface-variant text-sm mt-1">RSA dùng một cặp khóa gồm khóa công khai và khóa bí mật.</p>
-          </div>
-          <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-            <label class="text-label-sm text-on-surface-variant">
-              <span class="sr-only">Độ dài khóa</span>
-              <select id="rsaKeySize" class="bg-white/40 border border-outline-variant rounded-lg px-4 py-2 text-body-md">
-                <option>1024</option>
-                <option selected>2048</option>
-                <option>3072</option>
-                <option>4096</option>
-              </select>
-            </label>
-            <button id="rsaGenerate" class="bg-primary-container text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:brightness-110 active:scale-[0.98] transition-all">Tạo khóa tự động</button>
-          </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-          <label class="block">
-            <span class="block text-label-sm text-on-surface-variant mb-2">Khóa công khai PEM</span>
-            <textarea id="rsaPublicKey" class="lab-textarea text-[12px]" placeholder="-----BEGIN PUBLIC KEY-----" rows="6"></textarea>
-          </label>
-          <label class="block">
-            <span class="block text-label-sm text-on-surface-variant mb-2">Khóa bí mật PEM</span>
-            <textarea id="rsaPrivateKey" class="lab-textarea text-[12px]" placeholder="-----BEGIN PRIVATE KEY-----" rows="6"></textarea>
-          </label>
-        </div>
-      </article>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
-        <article class="glass-card p-gutter rounded-xl shadow-sm flex flex-col gap-4 border-t border-white/50">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="material-symbols-outlined text-primary-container">lock</span>
-            <h3 class="font-headline-md text-[20px] text-primary">Tiến trình Mã hóa</h3>
-          </div>
-          <label class="block">
-            <span class="block text-label-sm text-on-surface-variant mb-2">Bản rõ đầu vào</span>
-            <textarea id="rsaPlain" class="lab-textarea" placeholder="Nhập văn bản cần mã hóa..." rows="4"></textarea>
-          </label>
-          <label class="block bg-primary-fixed/30 p-4 rounded-lg border border-primary-container/20">
-            <span class="block text-label-sm text-primary-container mb-2 font-semibold">Cipher Base64 ra</span>
-            <textarea id="rsaCipherOut" class="lab-textarea result primary-result" placeholder="Cipher Base64 sẽ xuất hiện tại đây..." readonly rows="4"></textarea>
-          </label>
-          <div class="flex flex-col sm:flex-row gap-3 mt-4">
-            <button id="rsaEncrypt" class="flex-grow bg-primary-container text-white py-3 rounded-lg font-semibold shadow-md hover:brightness-110 active:scale-[0.98] transition-all">Mã hóa RSA</button>
-            <button id="rsaMove" class="px-4 py-3 bg-surface-container-high text-on-surface rounded-lg font-medium hover:bg-surface-container-highest transition-all flex items-center justify-center gap-2">
-              <span class="material-symbols-outlined">swap_horiz</span>
-              <span class="sm:hidden">Chuyển sang giải mã</span>
-            </button>
-          </div>
-        </article>
-
-        <article class="glass-card p-gutter rounded-xl shadow-sm flex flex-col gap-4 border-t border-white/50">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="material-symbols-outlined text-on-surface-variant">vpn_key</span>
-            <h3 class="font-headline-md text-[20px] text-primary">Tiến trình Giải mã</h3>
-          </div>
-          <label class="block">
-            <span class="block text-label-sm text-on-surface-variant mb-2">Cipher Base64 vào</span>
-            <textarea id="rsaCipherIn" class="lab-textarea" placeholder="Nhập bản mã Base64 cần giải mã..." rows="4"></textarea>
-          </label>
-          <label class="block bg-surface-container-low p-4 rounded-lg border border-outline-variant/30">
-            <span class="block text-label-sm text-on-surface-variant mb-2 font-semibold">Bản rõ kết quả</span>
-            <textarea id="rsaPlainOut" class="lab-textarea result" placeholder="Văn bản gốc sau khi giải mã..." readonly rows="4"></textarea>
-          </label>
-          <button id="rsaDecrypt" class="mt-4 w-full border-2 border-primary-container text-primary-container py-3 rounded-lg font-semibold hover:bg-primary-container/5 active:scale-[0.98] transition-all">Giải mã RSA</button>
-        </article>
-      </div>
-
-      <div class="status-shell">
-        <div class="flex items-center gap-2 text-primary-container font-medium">
-          <span class="material-symbols-outlined text-[18px]">check_circle</span>
-          <span id="rsaStatus" class="text-body-md">RSA: sẵn sàng tạo khóa và xử lý.</span>
-        </div>
-        <button id="rsaClear" class="clear-button">
-          <span class="material-symbols-outlined text-[20px]">delete</span>
-          Xóa toàn bộ
-        </button>
-      </div>
-    </section>
-  </main>
-
-  <aside class="fixed left-0 top-0 w-64 flex-col p-4 z-40 bg-white/40 backdrop-blur-md h-[calc(100vh-80px)] mt-20 rounded-r-2xl border-r border-white/10 shadow-[20px_0_30px_rgba(13,59,102,0.08)] hidden xl:flex">
-    <div class="mb-8">
-      <h4 class="font-black uppercase tracking-widest text-slate-900 font-label-sm">Cryptographic Lab</h4>
-      <p class="text-slate-500 text-[11px]">Academic Research v2.4</p>
-    </div>
+    <!-- Navigation links -->
     <nav class="space-y-2 flex-grow">
-      <button class="lab-link active" data-target="playfair">
-        <span class="material-symbols-outlined">grid_view</span>
-        <span>PlayFair Cipher</span>
+      <button class="nav-link active" data-tab="dashboard">
+        <span class="material-symbols-outlined text-cyan-400">dashboard</span>
+        <span>Tổng quan</span>
       </button>
-      <button class="lab-link" data-target="rsa">
-        <span class="material-symbols-outlined">enhanced_encryption</span>
-        <span>RSA Encryption</span>
+      <button class="nav-link" data-tab="playfair">
+        <span class="material-symbols-outlined text-emerald-400">grid_on</span>
+        <span>Mã hóa Playfair</span>
+      </button>
+      <button class="nav-link" data-tab="rsa">
+        <span class="material-symbols-outlined text-cyan-400">vpn_key</span>
+        <span>Mã hóa RSA</span>
+      </button>
+      <button class="nav-link" data-tab="file">
+        <span class="material-symbols-outlined text-purple-400">swap_calls</span>
+        <span>Mã hóa File (Hybrid)</span>
+      </button>
+      <button class="nav-link" data-tab="history">
+        <span class="material-symbols-outlined text-amber-400">history</span>
+        <span>Nhật ký & Lịch sử</span>
       </button>
     </nav>
-    <button class="mt-auto w-full bg-primary-container text-white py-4 rounded-xl font-bold uppercase text-[12px] tracking-widest shadow-lg hover:brightness-110 active:scale-95 transition-all" data-target="rsa" data-tab-shortcut>Generate Keys</button>
+
+    <!-- Bottom status -->
+    <div class="mt-auto pt-6 border-t border-slate-800/80 text-center space-y-4">
+      <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs text-slate-400 shadow-inner">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-glow"></span>
+        <span id="apiStatusText" class="font-mono text-[11px]">Đang kiểm tra API...</span>
+      </div>
+      <p class="text-[9px] text-slate-600 font-mono uppercase tracking-widest font-bold">NT101.Q22 - Group 07</p>
+    </div>
   </aside>
 
-  <div class="fixed top-0 right-0 -z-10 w-1/2 h-1/2 opacity-20 pointer-events-none crypto-orb"></div>
+  <!-- Main Content Wrapper -->
+  <div class="main-wrapper z-10 relative">
+    
+    <!-- HEADER -->
+    <header class="flex justify-between items-center mb-8 border-b border-slate-800/60 pb-6">
+      <div>
+        <h2 id="pageTitle" class="text-3xl font-extrabold font-['Space_Grotesk'] text-white tracking-tight flex items-center gap-2">
+          Tổng quan hệ thống
+        </h2>
+        <p id="pageSubtitle" class="text-xs md:text-sm text-slate-400 mt-1.5 font-medium">Trạng thái phòng lab mật mã học và hướng dẫn sử dụng.</p>
+      </div>
 
-  <dialog id="infoDialog">
-    <div class="dialog-head">
-      <h2 id="dialogTitle"></h2>
-      <button id="dialogClose" aria-label="Đóng">×</button>
+    </header>
+
+    <!-- PANEL: DASHBOARD -->
+    <section id="dashboardPanel" class="panel active space-y-8">
+      <!-- Greeting and summary cards -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <div class="glass-card lg:col-span-2 flex flex-col justify-between border-l-4 border-l-cyan-500 relative overflow-hidden group min-h-[220px]">
+          <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-cyan-500/5 rounded-full blur-2xl group-hover:bg-cyan-500/10 transition-all duration-500"></div>
+          <div class="space-y-4 z-10">
+            <span class="px-2.5 py-1 rounded-full bg-cyan-950/50 border border-cyan-800/60 text-[10px] uppercase font-mono font-bold text-cyan-400 tracking-wider">PHÒNG THỰC HÀNH MẬT MÃ</span>
+            <h3 class="text-2xl font-bold text-white font-['Space_Grotesk'] mt-1">Chào mừng bạn đến với NT101.Q22</h3>
+            <p class="text-sm text-slate-400 leading-relaxed max-w-2xl font-medium">
+              Hệ thống giả lập và phân tích mật mã học toàn diện. Cung cấp trải nghiệm trực quan hóa thuật toán đối xứng Playfair thế hệ mới, phân tích khóa bất đối xứng RSA và hệ thống mã hóa file lai (Hybrid Encryption) bảo mật cao cấp.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-4 mt-6 z-10">
+            <button onclick="document.querySelector('[data-tab=playfair]').click()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 hover:shadow-neon-emerald text-white rounded-xl text-xs font-bold transition-all duration-300 active:scale-[0.97]">
+              Bắt đầu Playfair Matrix
+            </button>
+            <button onclick="document.querySelector('[data-tab=rsa]').click()" class="px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 hover:shadow-neon-cyan text-white rounded-xl text-xs font-bold transition-all duration-300 active:scale-[0.97]">
+              Cấu hình RSA Vault
+            </button>
+          </div>
+        </div>
+        
+        <div class="glass-card flex flex-col justify-between border-l-4 border-l-purple-500 relative overflow-hidden group">
+          <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-purple-500/5 rounded-full blur-2xl group-hover:bg-purple-500/10 transition-all duration-500"></div>
+          <div class="space-y-4 z-10">
+            <span class="px-2.5 py-1 rounded-full bg-purple-900/50 border border-purple-800/60 text-[10px] uppercase font-mono font-bold text-purple-400 tracking-wider">THIẾT LẬP BẢO MẬT CAO</span>
+            <h3 class="text-xl font-bold text-white font-['Space_Grotesk']">Truyền File Lai (Hybrid)</h3>
+            <p class="text-xs text-slate-400 leading-relaxed font-medium">
+              Giải pháp cho các tập tin dung lượng lớn. Tự động tạo khóa AES-256 ngẫu nhiên mã hóa tệp tốc độ cao, và bảo vệ khóa bằng mật mã RSA-2048/4096.
+            </p>
+          </div>
+          <button onclick="document.querySelector('[data-tab=file]').click()" class="mt-6 px-4 py-2.5 w-full border border-purple-500/40 text-purple-400 hover:bg-purple-900/20 rounded-xl text-xs font-bold text-center transition-all duration-300 z-10">
+            Mở truyền file bảo mật
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick stats dashboard grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="glass-card flex items-center gap-4 hover:-translate-y-1 transition-all duration-300">
+          <div class="p-3.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span class="material-symbols-outlined text-2xl font-bold block">grid_on</span>
+          </div>
+          <div>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">Playfair Cipher</p>
+            <h4 class="text-md font-bold text-white mt-0.5">Ma Trận Tương Tác 5x5</h4>
+          </div>
+        </div>
+        <div class="glass-card flex items-center gap-4 hover:-translate-y-1 transition-all duration-300">
+          <div class="p-3.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+            <span class="material-symbols-outlined text-2xl font-bold block">key</span>
+          </div>
+          <div>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">RSA Inspector</p>
+            <h4 class="text-md font-bold text-white mt-0.5">Hỗ trợ tới 4096-bit</h4>
+          </div>
+        </div>
+        <div class="glass-card flex items-center gap-4 hover:-translate-y-1 transition-all duration-300">
+          <div class="p-3.5 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+            <span class="material-symbols-outlined text-2xl font-bold block">enhanced_encryption</span>
+          </div>
+          <div>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">File Crypt</p>
+            <h4 class="text-md font-bold text-white mt-0.5">AES-GCM + RSA</h4>
+          </div>
+        </div>
+        <div class="glass-card flex items-center gap-4 hover:-translate-y-1 transition-all duration-300">
+          <div class="p-3.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <span class="material-symbols-outlined text-2xl font-bold block">history</span>
+          </div>
+          <div>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">Audit Logs</p>
+            <h4 id="quickLogsCount" class="text-md font-bold text-white mt-0.5">0 bản ghi lưu</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Principles & Guidelines documentation -->
+      <div class="glass-card relative overflow-hidden">
+        <h4 class="text-lg font-bold text-white font-['Space_Grotesk'] mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-cyan-400">menu_book</span>
+          Nguyên lý hoạt động cơ bản
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-400">
+          <div class="space-y-3 p-5 rounded-2xl bg-slate-950/40 border border-slate-800/60 hover:border-emerald-500/20 transition-colors duration-300">
+            <h5 class="font-bold text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-neon-emerald"></span>
+              Thuật toán Playfair (Mã hóa đối xứng)
+            </h5>
+            <p class="text-xs leading-relaxed text-slate-400">
+              Mã hóa Playfair sử dụng một ma trận kích thước 5x5 chứa các chữ cái trong từ khóa khóa và điền đầy bằng các chữ cái còn lại trong bảng chữ cái (thường bỏ qua 'J' hoặc gộp chung với 'I'). Văn bản cần truyền được chia thành các cặp ký tự để thay thế thông qua 3 quy tắc: hàng ngang (dịch phải), cột dọc (dịch xuống), và hình chữ nhật (đổi góc chéo).
+            </p>
+          </div>
+          <div class="space-y-3 p-5 rounded-2xl bg-slate-950/40 border border-slate-800/60 hover:border-cyan-500/20 transition-colors duration-300">
+            <h5 class="font-bold text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-neon-cyan"></span>
+              Thuật toán RSA (Mã hóa bất đối xứng)
+            </h5>
+            <p class="text-xs leading-relaxed text-slate-400">
+              RSA dựa trên độ khó toán học của bài toán phân tích các số nguyên cực kỳ lớn thành thừa số nguyên tố. Người nhận tạo ra hai khóa: Khóa công khai (Public Key) dùng để mã hóa và phân phối rộng rãi, và Khóa bí mật (Private Key) được lưu trữ cực kỳ an toàn để giải mã thông tin.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL: PLAYFAIR CIPHER -->
+    <section id="playfairPanel" class="panel space-y-6">
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        
+        <!-- Left: Form inputs -->
+        <div class="xl:col-span-2 space-y-6">
+          <div class="glass-card border-t border-t-emerald-500/40 relative">
+            <div class="flex justify-between items-center mb-6">
+              <h4 class="text-lg font-bold text-white font-['Space_Grotesk'] flex items-center gap-2">
+                <span class="material-symbols-outlined text-emerald-400">tune</span>
+                Cấu hình & Nhập liệu
+              </h4>
+              <button class="px-3 py-1.5 rounded-xl text-xs font-semibold border border-emerald-500/30 text-emerald-400 hover:bg-emerald-950/30 transition-all duration-300" onclick="showInfoDialog('playfair')">
+                Xem Hướng dẫn
+              </button>
+            </div>
+            
+            <div class="space-y-5">
+              <div>
+                <label for="playfairKey" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Khóa Playfair (A-Z, tự động chuẩn hóa)</label>
+                <input type="text" id="playfairKey" class="input-field border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 uppercase font-mono tracking-widest text-emerald-400 placeholder-slate-700 rounded-xl bg-slate-950/80" placeholder="NHẬP KHÓA (Ví dụ: MONARCHY)..." value="MONARCHY">
+                <p class="text-[10px] text-slate-500 mt-1.5 font-medium">Lưu ý: Hệ thống tự động lọc bỏ các ký tự trùng và quy đổi 'J' thành 'I'.</p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="space-y-2">
+                  <label for="playfairPlain" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Bản rõ (Plaintext)</label>
+                  <textarea id="playfairPlain" rows="5" class="terminal-textarea emerald-focus rounded-xl bg-slate-950/80 font-mono text-xs border-slate-800/80 focus:border-emerald-500" placeholder="Nhập bản rõ cần mã hóa..."></textarea>
+                </div>
+                <div class="space-y-2">
+                  <label for="playfairCipherIn" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Bản mã (Ciphertext)</label>
+                  <textarea id="playfairCipherIn" rows="5" class="terminal-textarea emerald-focus rounded-xl bg-slate-950/80 font-mono text-xs border-slate-800/80 focus:border-emerald-500" placeholder="Nhập bản mã cần giải mã..."></textarea>
+                </div>
+              </div>
+
+              <!-- Controls -->
+              <div class="flex flex-wrap gap-3 pt-2">
+                <button id="btnPlayfairEncrypt" class="flex-1 min-w-[120px] bg-emerald-600 hover:bg-emerald-500 hover:shadow-neon-emerald text-white font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2">
+                  <span class="material-symbols-outlined text-[18px]">lock</span>
+                  Mã hóa
+                </button>
+                <button id="btnPlayfairDecrypt" class="flex-1 min-w-[120px] border border-emerald-500 text-emerald-400 hover:bg-emerald-950/20 font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2">
+                  <span class="material-symbols-outlined text-[18px]">lock_open</span>
+                  Giải mã
+                </button>
+                <button id="btnPlayfairSwap" class="px-4 py-3 bg-slate-950/80 border border-slate-850 hover:bg-slate-900 text-slate-300 rounded-xl text-sm transition-all duration-300 flex items-center justify-center hover:border-emerald-500/40" title="Chuyển bản mã sang khu giải mã">
+                  <span class="material-symbols-outlined text-[20px]">swap_horiz</span>
+                </button>
+                <button id="btnPlayfairClear" class="px-4 py-3 bg-slate-950/80 border border-slate-850 text-rose-400 hover:bg-rose-950/20 rounded-xl text-sm transition-all duration-300 flex items-center justify-center hover:border-rose-500/40" title="Xóa dữ liệu">
+                  <span class="material-symbols-outlined text-[20px]">delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Result Terminal -->
+          <div class="glass-card">
+            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Kết quả đầu ra</h4>
+            <div class="relative">
+              <textarea id="playfairOutput" rows="3" readonly class="terminal-textarea text-emerald-400 border-slate-800/80 bg-slate-950/90 font-mono text-sm leading-relaxed" placeholder="Kết quả xử lý..."></textarea>
+              <button id="btnCopyPlayfair" class="absolute top-3.5 right-3.5 p-2 rounded-xl bg-slate-900/90 hover:bg-slate-850 text-slate-400 hover:text-emerald-400 border border-slate-800 transition-all duration-300" title="Sao chép kết quả">
+                <span class="material-symbols-outlined text-[18px]">content_copy</span>
+              </button>
+            </div>
+            <div id="playfairStatus" class="text-xs mt-3 text-slate-500 font-mono font-medium flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-slate-700"></span>
+              <span>SYSTEM READY</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Matrix Visualizer & Step Logs -->
+        <div class="space-y-6">
+          <!-- 5x5 Matrix Card -->
+          <div class="glass-card text-center border-t border-t-emerald-500/20 relative">
+            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-5">Ma trận Playfair 5x5</h4>
+            <div id="playfairMatrix" class="matrix-container">
+              <!-- Grid populated dynamically by app.js -->
+            </div>
+          </div>
+
+          <!-- Process logs -->
+          <div class="glass-card flex flex-col h-[305px] border-t border-t-emerald-500/10">
+            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Nhật ký chuyển đổi (Từng cặp)</h4>
+            <div id="playfairStepsContainer" class="flex-grow overflow-y-auto space-y-2.5 pr-1 text-xs custom-scrollbar">
+              <div class="text-slate-600 text-center py-10 font-mono">Nhập liệu và thực hiện mã hóa/giải mã để xem luồng chuyển đổi chi tiết.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PANEL: RSA VAULT -->
+    <section id="rsaPanel" class="panel space-y-6">
+      
+      <!-- Key Management -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left: Key Generator -->
+        <div class="glass-card lg:col-span-1 border-t border-t-cyan-500/40 flex flex-col justify-between relative min-h-[360px]">
+          <div class="space-y-4">
+            <h4 class="text-lg font-bold text-white font-['Space_Grotesk'] flex items-center gap-2">
+              <span class="material-symbols-outlined text-cyan-400">lock_open</span>
+              Quản lý Cặp Khóa RSA
+            </h4>
+            <p class="text-xs text-slate-400 leading-relaxed font-medium">
+              Sinh cặp khóa công khai và bí mật theo chuẩn mã hóa bất đối xứng để thực hiện các giao dịch bảo mật.
+            </p>
+
+            <div class="space-y-3 pt-2">
+              <label for="rsaKeySize" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Độ dài khóa (Bit Size)</label>
+              <select id="rsaKeySize" class="input-field border-slate-800 bg-slate-950/80 focus:ring-cyan-500 focus:border-cyan-500 text-slate-100 rounded-xl">
+                <option value="1024">1024-bit (Yếu - Thử nghiệm)</option>
+                <option value="2048" selected>2048-bit (Đạt chuẩn an toàn)</option>
+                <option value="3072">3072-bit (Mạnh - Cấp cao)</option>
+                <option value="4096">4096-bit (Rất mạnh - Quân sự)</option>
+              </select>
+            </div>
+
+            <div class="space-y-2 pt-2">
+              <div class="flex justify-between text-[10px] uppercase font-bold text-slate-500 font-mono">
+                <span>Độ an toàn dự báo</span>
+                <span id="rsaSafetyText" class="text-cyan-400">Đạt tiêu chuẩn</span>
+              </div>
+              <div class="strength-bar bg-slate-900 rounded-full overflow-hidden h-2.5 border border-slate-800">
+                <div id="rsaStrengthBar" class="strength-fill bg-cyan-500 h-full shadow-neon-cyan transition-all duration-500" style="width: 50%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <button id="btnRsaGenerate" class="mt-6 w-full bg-cyan-600 hover:bg-cyan-500 hover:shadow-neon-cyan text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">sync</span>
+            Tạo cặp khóa mới
+          </button>
+        </div>
+
+        <!-- Right: PEM Key Viewports -->
+        <div class="glass-card lg:col-span-2 space-y-4 flex flex-col justify-between">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 h-full">
+            <div class="space-y-2 flex flex-col">
+              <div class="flex justify-between items-center">
+                <label for="rsaPublicKey" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Khóa công khai (Public Key PEM)</label>
+                <button class="text-[10px] text-cyan-400 hover:text-cyan-300 font-bold uppercase tracking-wider transition-colors" onclick="btnInspectKey('rsaPublicKey')">Phân tích khóa</button>
+              </div>
+              <textarea id="rsaPublicKey" class="terminal-textarea flex-grow text-xs text-cyan-400 border-slate-800/80 bg-slate-950/80 font-mono rounded-xl p-3 h-[200px]" placeholder="-----BEGIN PUBLIC KEY-----&#10;..."></textarea>
+            </div>
+            <div class="space-y-2 flex flex-col">
+              <div class="flex justify-between items-center">
+                <label for="rsaPrivateKey" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Khóa bí mật (Private Key PEM)</label>
+                <button class="text-[10px] text-cyan-400 hover:text-cyan-300 font-bold uppercase tracking-wider transition-colors" onclick="btnInspectKey('rsaPrivateKey')">Phân tích khóa</button>
+              </div>
+              <textarea id="rsaPrivateKey" class="terminal-textarea flex-grow text-xs text-purple-400 border-slate-800/80 bg-slate-950/80 font-mono rounded-xl p-3 h-[200px]" placeholder="-----BEGIN PRIVATE KEY-----&#10;..."></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Key Inspector Output Widget -->
+      <div id="keyInspectorPanel" class="glass-card hidden border-l-4 border-l-cyan-500 animate-panel-rise relative overflow-hidden bg-slate-900/80">
+        <div class="absolute right-3 top-3">
+          <button class="text-slate-500 hover:text-white transition-colors p-1.5 rounded-xl hover:bg-slate-800" onclick="document.getElementById('keyInspectorPanel').classList.add('hidden')">
+            <span class="material-symbols-outlined text-[20px]">close</span>
+          </button>
+        </div>
+        <div class="space-y-4">
+          <h4 class="text-xs font-bold uppercase text-cyan-400 tracking-widest font-mono">BẢNG PHÂN TÍCH CHI TIẾT KHÓA RSA</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs font-mono">
+            <div class="inspector-badge flex flex-col justify-between py-2 px-3 rounded-xl bg-slate-950/40 border border-slate-800/80">
+              <span class="text-slate-500 text-[10px] uppercase font-bold">Loại khóa</span>
+              <span id="inspectKeyType" class="text-white font-bold mt-1">-</span>
+            </div>
+            <div class="inspector-badge flex flex-col justify-between py-2 px-3 rounded-xl bg-slate-950/40 border border-slate-800/80">
+              <span class="text-slate-500 text-[10px] uppercase font-bold">Độ dài (Bit Size)</span>
+              <span id="inspectKeySize" class="text-cyan-400 font-bold mt-1">-</span>
+            </div>
+            <div class="inspector-badge flex flex-col justify-between py-2 px-3 rounded-xl bg-slate-950/40 border border-slate-800/80">
+              <span class="text-slate-500 text-[10px] uppercase font-bold">Số mũ (e)</span>
+              <span id="inspectKeyExponent" class="text-white font-bold mt-1">-</span>
+            </div>
+            <div class="inspector-badge flex flex-col justify-between py-2 px-3 rounded-xl bg-slate-950/40 border border-slate-800/80">
+              <span class="text-slate-500 text-[10px] uppercase font-bold">Độ an toàn</span>
+              <span id="inspectKeySafety" class="text-emerald-400 font-bold mt-1">-</span>
+            </div>
+          </div>
+          <div class="inspector-badge text-[10px] font-mono p-3 rounded-xl bg-slate-950/90 border border-slate-800/80 max-h-[100px] overflow-y-auto custom-scrollbar">
+            <span class="text-slate-500 font-bold block mb-1">MODULUS (N) Hexadecimal:</span>
+            <span id="inspectKeyModulus" class="text-slate-300 break-all leading-normal">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Encryption / Decryption with RSA -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- RSA Encryption card -->
+        <div class="glass-card space-y-4 border-t border-t-cyan-500/20">
+          <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2 text-cyan-400">
+            <span class="material-symbols-outlined text-[20px]">lock</span>
+            Mã hóa RSA (Plaintext -> Base64)
+          </h4>
+          <div class="space-y-2">
+            <label for="rsaPlainIn" class="block text-xs text-slate-400 font-medium">Nhập bản rõ cần mã hóa</label>
+            <textarea id="rsaPlainIn" rows="4" class="terminal-textarea cyan-focus rounded-xl bg-slate-950/80 text-xs border-slate-800" placeholder="Nhập văn bản cần mã hóa bằng khóa công khai..."></textarea>
+          </div>
+          <div class="space-y-2">
+            <label for="rsaCipherOut" class="block text-xs text-slate-400 font-medium">Bản mã Base64 kết quả</label>
+            <textarea id="rsaCipherOut" rows="3" readonly class="terminal-textarea border-slate-850 bg-slate-950/90 text-cyan-400 font-mono text-xs" placeholder="Bản mã hóa base64 sẽ xuất hiện tại đây..."></textarea>
+          </div>
+          <div class="flex gap-3">
+            <button id="btnRsaEncrypt" class="flex-grow bg-cyan-600 hover:bg-cyan-500 hover:shadow-neon-cyan text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">lock</span>
+              Mã hóa
+            </button>
+            <button id="btnRsaMove" class="px-4 py-3 bg-slate-950 border border-slate-800 hover:border-cyan-500/40 text-slate-400 hover:text-white rounded-xl text-xs transition-all duration-300 flex items-center justify-center" title="Chuyển bản mã sang khu giải mã">
+              <span class="material-symbols-outlined text-[18px]">swap_horiz</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- RSA Decryption card -->
+        <div class="glass-card space-y-4 border-t border-t-purple-500/20">
+          <h4 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2 text-purple-400">
+            <span class="material-symbols-outlined text-[20px]">lock_open</span>
+            Giải mã RSA (Base64 -> Plaintext)
+          </h4>
+          <div class="space-y-2">
+            <label for="rsaCipherIn" class="block text-xs text-slate-400 font-medium">Nhập chuỗi bản mã Base64</label>
+            <textarea id="rsaCipherIn" rows="4" class="terminal-textarea purple-focus rounded-xl bg-slate-950/80 text-xs border-slate-800" placeholder="Nhập bản mã base64 cần giải mã bằng khóa bí mật..."></textarea>
+          </div>
+          <div class="space-y-2">
+            <label for="rsaPlainOut" class="block text-xs text-slate-400 font-medium">Bản rõ phục hồi</label>
+            <textarea id="rsaPlainOut" rows="3" readonly class="terminal-textarea border-slate-850 bg-slate-950/90 text-purple-400 text-xs font-mono" placeholder="Nội dung bản rõ khôi phục..."></textarea>
+          </div>
+          <button id="btnRsaDecrypt" class="w-full border border-purple-500 text-purple-400 hover:bg-purple-950/20 font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">lock_open</span>
+            Giải mã dữ liệu
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Action status bar -->
+      <div class="status-shell flex justify-between items-center border border-slate-800 bg-slate-950/80 p-4 rounded-xl shadow-lg">
+        <div class="flex items-center gap-2 text-cyan-400 text-xs font-mono font-bold">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse-glow block"></span>
+          <span id="rsaStatusText">RSA: Hệ thống sẵn sàng.</span>
+        </div>
+        <button id="btnRsaClear" class="clear-button text-xs py-1.5 px-4 bg-slate-900 border border-slate-800 text-rose-400 hover:bg-rose-950/30 rounded-xl font-bold flex items-center gap-1 transition-all">
+          <span class="material-symbols-outlined text-[18px]">delete</span>
+          Xóa toàn bộ
+        </button>
+      </div>
+
+    </section>
+
+    <!-- PANEL: FILE CRYPT HYBRID -->
+    <section id="filePanel" class="panel space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left: Upload & Actions -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="glass-card border-t border-t-purple-500/40 relative">
+            <h4 class="text-lg font-bold text-white font-['Space_Grotesk'] mb-5 flex items-center gap-2">
+              <span class="material-symbols-outlined text-purple-400">folder_zip</span>
+              Nạp tệp tin cần xử lý
+            </h4>
+            
+            <!-- Drag and Drop Zone -->
+            <div id="dropzone" class="dropzone relative overflow-hidden group">
+              <input type="file" id="fileInput" class="hidden">
+              <span class="material-symbols-outlined text-5xl text-purple-400 animate-pulse block">cloud_upload</span>
+              <p class="text-sm font-bold text-white mt-3 group-hover:text-purple-300 transition-colors">Kéo thả tệp tin của bạn vào đây hoặc click để duyệt</p>
+              <p class="text-xs text-slate-500 mt-1.5 font-medium">Hỗ trợ mọi định dạng (Tài liệu, Hình ảnh, Tệp nén) dung lượng lên tới 5MB</p>
+            </div>
+
+            <!-- Uploaded file details -->
+            <div id="fileDetails" class="hidden mt-5 p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs animate-panel-rise">
+              <div class="flex items-center gap-3">
+                <div class="p-2.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                  <span class="material-symbols-outlined text-2xl block">description</span>
+                </div>
+                <div>
+                  <p id="detailsFileName" class="text-white font-bold text-sm truncate max-w-[200px] sm:max-w-[400px]">-</p>
+                  <p id="detailsFileSize" class="text-slate-500 mt-1 font-mono font-semibold">-</p>
+                </div>
+              </div>
+              <button id="btnRemoveFile" class="text-slate-500 hover:text-rose-400 transition-colors p-1.5 rounded-xl hover:bg-slate-900" title="Hủy chọn tệp">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+
+            <!-- Key Generation Shortcut -->
+            <div class="flex justify-between items-center mt-6 mb-3">
+              <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Cấu hình khóa RSA bảo mật</span>
+              <button id="btnFileGenerateKeys" type="button" class="px-3 py-1.5 bg-slate-950 hover:bg-purple-950/40 border border-slate-800 hover:border-purple-500 text-purple-400 rounded-xl text-[11px] font-bold flex items-center gap-1.5 transition-all shadow-inner active:scale-[0.98]">
+                <span class="material-symbols-outlined text-[16px]">autorenew</span>
+                Tự động tạo & điền khóa RSA
+              </button>
+            </div>
+
+            <!-- Form parameters -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
+              <div class="space-y-2">
+                <label for="filePublicKey" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Khóa công khai (Public Key) để MÃ HÓA</label>
+                <textarea id="filePublicKey" rows="4" class="terminal-textarea text-xs text-cyan-400 font-mono border-slate-800 bg-slate-950/80 rounded-xl" placeholder="-----BEGIN PUBLIC KEY-----"></textarea>
+              </div>
+              <div class="space-y-2">
+                <label for="filePrivateKey" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Khóa bí mật (Private Key) để GIẢI MÃ</label>
+                <textarea id="filePrivateKey" rows="4" class="terminal-textarea text-xs text-purple-400 font-mono border-slate-800 bg-slate-950/80 rounded-xl" placeholder="-----BEGIN PRIVATE KEY-----"></textarea>
+              </div>
+            </div>
+
+            <!-- Actions buttons -->
+            <div class="flex gap-4 mt-6">
+              <button id="btnFileEncrypt" class="flex-grow bg-purple-600 hover:bg-purple-500 hover:shadow-neon-purple text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">lock</span>
+                Mã hóa lai (.enc)
+              </button>
+              <button id="btnFileDecrypt" class="flex-grow border border-purple-500 text-purple-400 hover:bg-purple-950/20 font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition-all duration-300 active:scale-[0.98] flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">lock_open</span>
+                Giải mã tệp .enc
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: What is Hybrid Encryption -->
+        <div class="space-y-6">
+          <div class="glass-card border-t border-t-purple-500/20 space-y-4">
+            <h4 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-purple-400">info</span>
+              Cơ chế mã hóa file lai
+            </h4>
+            <div class="text-xs text-slate-400 space-y-4 leading-relaxed font-medium">
+              <p>
+                Mã hóa đối xứng (AES) hoạt động cực nhanh trên các tập tin kích thước lớn, nhưng nhược điểm là khó phân phối khóa bảo mật. Mã hóa bất đối xứng (RSA) an toàn cao nhưng tốc độ chậm và bị giới hạn độ dài khối tin.
+              </p>
+              <p class="text-white font-semibold">
+                Sự kết hợp hoàn hảo:
+              </p>
+              <ul class="list-decimal list-inside space-y-2.5 text-slate-400">
+                <li>
+                  Hệ thống sinh ngẫu nhiên khóa mã hóa đối xứng <strong class="text-purple-400 font-mono">AES-256 Key</strong> cho mỗi phiên.
+                </li>
+                <li>
+                  Mã hóa nội dung tệp bằng thuật toán <strong class="text-purple-400">AES-256-GCM</strong> ở tốc độ tối đa.
+                </li>
+                <li>
+                  Lấy khóa <strong class="text-cyan-400">RSA Public Key</strong> để mã hóa bảo mật lại chiếc khóa đối xứng đó.
+                </li>
+                <li>
+                  Đóng gói dữ liệu tệp đã mã hóa và khóa AES đã mã hóa thành một định dạng chung duy nhất <strong class="text-white">(.enc)</strong> để truyền đi.
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="glass-card flex flex-col items-center justify-center py-8 text-center border-slate-800 bg-slate-950/40 rounded-2xl">
+            <span class="material-symbols-outlined text-4xl text-purple-400 animate-pulse-glow block">lock_zip</span>
+            <h5 class="text-xs font-bold text-white uppercase tracking-wider mt-3">TUÂN THỦ BẢO MẬT QUỐC TẾ</h5>
+            <p class="text-[10px] text-slate-500 mt-1 font-semibold font-mono">STANDARDIZED HYBRID CRYPTOGRAPHY</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PANEL: HISTORY LOGS -->
+    <section id="historyPanel" class="panel space-y-6">
+      <div class="glass-card">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h4 class="text-lg font-bold text-white font-['Space_Grotesk'] flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-400">history</span>
+              Lịch sử Tính toán mật mã
+            </h4>
+            <p class="text-xs text-slate-400 mt-1 font-medium">Danh sách các thao tác thực hiện mã hóa và giải mã được ghi lại trên trình duyệt của bạn (LocalStorage).</p>
+          </div>
+          <button id="btnClearHistory" class="px-4 py-2 rounded-xl border border-rose-500/30 text-rose-400 hover:bg-rose-950/20 text-xs font-bold flex items-center gap-1.5 transition-all duration-300">
+            <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
+            Xóa lịch sử
+          </button>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-800/80 bg-slate-950/20">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="border-b border-slate-800/80 text-slate-500 uppercase tracking-widest font-mono font-bold">
+                <th class="py-4 px-5">Thời gian</th>
+                <th class="py-4 px-5">Thuật toán</th>
+                <th class="py-4 px-5">Thao tác</th>
+                <th class="py-4 px-5">Độ dài</th>
+                <th class="py-4 px-5">Khóa sử dụng</th>
+                <th class="py-4 px-5 text-right">Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody" class="divide-y divide-slate-800/40 text-slate-300 font-medium">
+              <!-- Entries populated dynamically by app.js -->
+              <tr>
+                <td colspan="6" class="py-12 text-center text-slate-600 font-mono">Chưa ghi nhận hoạt động tính toán nào.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto pt-16 pb-8 border-t border-slate-900/60 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-medium z-10 relative">
+      <p>© 2026 CryptoLab. Tất cả dữ liệu tính toán được xử lý trực tiếp trên thiết bị đầu cuối và qua cổng API bảo mật.</p>
+      <div class="flex gap-5">
+        <a href="#" class="hover:text-slate-350 transition-colors">Tài liệu hướng dẫn</a>
+        <a href="#" class="hover:text-slate-350 transition-colors">API References</a>
+        <a href="#" class="hover:text-slate-350 transition-colors">Bảo mật</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Dynamic Explanation Dialog -->
+  <dialog id="infoDialog" class="p-0 border-none bg-transparent">
+    <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm -z-10" onclick="document.getElementById('infoDialog').close()"></div>
+    <div class="relative glass-card border border-slate-800 bg-[#0f172a] shadow-2xl p-6 max-w-lg w-full rounded-2xl mx-auto my-auto animate-panel-rise z-50">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3.5 mb-4">
+        <h3 id="dialogTitle" class="text-lg font-bold font-['Space_Grotesk'] text-white">-</h3>
+        <button onclick="document.getElementById('infoDialog').close()" class="text-slate-500 hover:text-white transition-colors p-1.5 rounded-xl hover:bg-slate-800">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div id="dialogBody" class="text-xs text-slate-450 font-medium leading-relaxed space-y-3.5 whitespace-pre-line max-h-[350px] overflow-y-auto pr-1 custom-scrollbar">
+        <!-- Body dynamic content -->
+      </div>
+      <div class="mt-6 flex justify-end">
+        <button onclick="document.getElementById('infoDialog').close()" class="px-5 py-2.5 bg-slate-850 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-white rounded-xl text-xs font-bold transition-all duration-300">
+          Xác nhận
+        </button>
+      </div>
     </div>
-    <pre id="dialogBody"></pre>
   </dialog>
 
-  <footer class="w-full py-6 px-6 md:px-12 flex justify-center items-center mt-auto border-t border-slate-200 bg-slate-50/80 backdrop-blur-md xl:pl-72">
-    <span class="font-bold text-slate-800 text-label-sm uppercase tracking-widest">NT101.Q22 Group07</span>
-  </footer>
-
-  <script src="app.js"></script>
+  <!-- Script references -->
+  <script src="app.js?v=1.0.5"></script>
 </body>
 </html>
-
-
-
-
