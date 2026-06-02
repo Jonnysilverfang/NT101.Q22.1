@@ -59,6 +59,8 @@ let loadedFile = null;
 // ==========================================
 async function checkApiHealth() {
   const statusEl = document.getElementById('apiStatusText');
+  if (!statusEl) return;
+
   try {
     const res = await fetch('/api/health');
     if (res.ok) {
