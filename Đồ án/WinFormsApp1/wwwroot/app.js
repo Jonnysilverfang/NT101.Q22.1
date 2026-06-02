@@ -558,9 +558,26 @@ document.getElementById('btnRemoveFile').addEventListener('click', (e) => {
   fileDetails.classList.add('hidden');
 });
 
-document.getElementById('btnImportFilePublicKey').addEventListener('click', () => filePublicKeyImport.click());
-document.getElementById('btnImportFilePrivateKey').addEventListener('click', () => filePrivateKeyImport.click());
-document.getElementById('btnDownloadFilePrivateKey').addEventListener('click', downloadFilePrivateKey);
+function openKeyImportPicker(input, event) {
+  event.preventDefault();
+  event.stopPropagation();
+
+  if (!input) {
+    alert("Không tìm thấy ô chọn file khóa. Vui lòng tải lại trang và thử lại.");
+    return;
+  }
+
+  input.value = "";
+  input.click();
+}
+
+document.getElementById('btnImportFilePublicKey').addEventListener('click', (e) => openKeyImportPicker(filePublicKeyImport, e));
+document.getElementById('btnImportFilePrivateKey').addEventListener('click', (e) => openKeyImportPicker(filePrivateKeyImport, e));
+document.getElementById('btnDownloadFilePrivateKey').addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  downloadFilePrivateKey();
+});
 
 filePublicKeyImport.addEventListener('change', () => {
   importRsaKeyFile(filePublicKeyImport, 'public');

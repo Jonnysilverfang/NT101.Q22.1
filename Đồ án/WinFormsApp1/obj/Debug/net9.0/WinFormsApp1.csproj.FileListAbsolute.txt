@@ -57,8 +57,6 @@ F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\staticwebassets.build
 F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\swae.build.ex.cache
 F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\WinFormsApp1.genruntimeconfig.cache
 F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\ref\DoAnCryptoWeb.dll
-F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\compressed\wlgc0sdbmd-{0}-z2x7s5mwdp-z2x7s5mwdp.gz
-F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\compressed\p101fn4f2e-{0}-9x478s06ip-9x478s06ip.gz
 C:\tmp\doancrypto-build-check\DoAnCryptoWeb.staticwebassets.runtime.json
 C:\tmp\doancrypto-build-check\DoAnCryptoWeb.staticwebassets.endpoints.json
 C:\tmp\doancrypto-build-check\DoAnCryptoWeb.exe
@@ -66,3 +64,12 @@ C:\tmp\doancrypto-build-check\DoAnCryptoWeb.deps.json
 C:\tmp\doancrypto-build-check\DoAnCryptoWeb.runtimeconfig.json
 C:\tmp\doancrypto-build-check\DoAnCryptoWeb.dll
 C:\tmp\doancrypto-build-check\DoAnCryptoWeb.pdb
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\compressed\wlgc0sdbmd-{0}-q08xvtb39m-q08xvtb39m.gz
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\compressed\p101fn4f2e-{0}-kv5t4zx94m-kv5t4zx94m.gz
+C:\tmp\doan-build-check\DoAnCryptoWeb.staticwebassets.runtime.json
+C:\tmp\doan-build-check\DoAnCryptoWeb.staticwebassets.endpoints.json
+C:\tmp\doan-build-check\DoAnCryptoWeb.exe
+C:\tmp\doan-build-check\DoAnCryptoWeb.deps.json
+C:\tmp\doan-build-check\DoAnCryptoWeb.runtimeconfig.json
+C:\tmp\doan-build-check\DoAnCryptoWeb.dll
+C:\tmp\doan-build-check\DoAnCryptoWeb.pdb

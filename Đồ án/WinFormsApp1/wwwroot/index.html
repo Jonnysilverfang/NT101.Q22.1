@@ -341,10 +341,10 @@
             <div class="space-y-3 pt-2">
               <label for="rsaKeySize" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Độ dài khóa (Bit Size)</label>
               <select id="rsaKeySize" class="input-field border-slate-800 bg-slate-950/80 focus:ring-cyan-500 focus:border-cyan-500 text-slate-100 rounded-xl">
-                <option value="1024">1024-bit (Yếu - Thử nghiệm)</option>
-                <option value="2048" selected>2048-bit (Đạt chuẩn an toàn)</option>
-                <option value="3072">3072-bit (Mạnh - Cấp cao)</option>
-                <option value="4096">4096-bit (Rất mạnh - Quân sự)</option>
+                <option value="1024">1024-bit - Thử nghiệm</option>
+                <option value="2048" selected>2048-bit - An toàn</option>
+                <option value="3072">3072-bit - Mạnh</option>
+                <option value="4096">4096-bit - Rất mạnh</option>
               </select>
             </div>
 
@@ -541,7 +541,7 @@
                     Import Public Key
                   </button>
                 </div>
-                <input type="file" id="filePublicKeyImport" class="hidden" accept=".pem,.key,.pub,.txt">
+                <input type="file" id="filePublicKeyImport" class="sr-only" tabindex="-1" aria-hidden="true" accept=".pem,.key,.pub,.txt">
                 <textarea id="filePublicKey" rows="4" class="terminal-textarea text-xs text-cyan-400 font-mono border-slate-800 bg-slate-950/80 rounded-xl" placeholder="-----BEGIN PUBLIC KEY-----"></textarea>
               </div>
               <div class="space-y-2">
@@ -558,7 +558,7 @@
                     </button>
                   </div>
                 </div>
-                <input type="file" id="filePrivateKeyImport" class="hidden" accept=".pem,.key,.txt">
+                <input type="file" id="filePrivateKeyImport" class="sr-only" tabindex="-1" aria-hidden="true" accept=".pem,.key,.txt">
                 <textarea id="filePrivateKey" rows="4" class="terminal-textarea text-xs text-purple-400 font-mono border-slate-800 bg-slate-950/80 rounded-xl" placeholder="-----BEGIN PRIVATE KEY-----"></textarea>
               </div>
             </div>
@@ -682,6 +682,6 @@
   </dialog>
 
   <!-- Script references -->
-  <script src="app.js?v=1.0.5"></script>
+  <script src="app.js?v=1.0.6"></script>
 </body>
 </html>

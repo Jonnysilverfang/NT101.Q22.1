@@ -683,6 +683,20 @@ button:active {
   text-transform: uppercase;
 }
 
+#rsaKeySize {
+  min-height: 48px;
+  font-size: 1rem !important;
+  line-height: 1.25 !important;
+  padding: 0.65rem 2.5rem 0.65rem 0.9rem !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#rsaKeySize option {
+  font-size: 1rem;
+}
+
 .matrix-container {
   gap: 0.75rem;
   max-width: 25rem;
