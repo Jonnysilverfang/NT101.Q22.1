@@ -32,12 +32,12 @@ app.MapPost("/api/rsa/generate", (RsaKeyRequest request) =>
     RunCryptoAction(() =>
     {
         int keySize = request.KeySize is 1024 or 2048 or 3072 or 4096 ? request.KeySize : 2048;
-        using RSA rsa = RSA.Create(keySize);
+        var (pubKey, privKey) = CryptoService.GenerateCustomRsaKeys(keySize);
 
         return new RsaKeyResponse(
-            rsa.ExportRSAPublicKeyPem(),
-            rsa.ExportRSAPrivateKeyPem(),
-            $"RSA: đã tạo cặp khóa {keySize}-bit.");
+            pubKey,
+            privKey,
+            $"RSA: đã tạo cặp khóa {keySize}-bit bằng thuật toán thủ công.");
     }));
 
 app.MapPost("/api/rsa/encrypt", (RsaCryptoRequest request) =>

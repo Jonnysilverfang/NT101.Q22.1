@@ -109,11 +109,11 @@ public partial class Form1 : Form
         try
         {
             int keySize = int.Parse(cboRsaKeySize.Text);
-            using RSA rsa = RSA.Create(keySize);
+            var (pubKey, privKey) = CryptoService.GenerateCustomRsaKeys(keySize);
 
-            txtRsaPublicKey.Text = rsa.ExportRSAPublicKeyPem();
-            txtRsaPrivateKey.Text = rsa.ExportRSAPrivateKeyPem();
-            lblRsaStatus.Text = $"RSA: đã tạo cặp khóa {keySize}-bit.";
+            txtRsaPublicKey.Text = pubKey;
+            txtRsaPrivateKey.Text = privKey;
+            lblRsaStatus.Text = $"RSA: đã tạo cặp khóa {keySize}-bit bằng thuật toán thủ công.";
         }
         catch (Exception ex)
         {

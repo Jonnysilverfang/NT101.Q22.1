@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DoAnCryptoWeb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3687299972e2de177507a964b110e4b514dcdc4c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fab7234ccbafa7fdb0bcc5d52b81a2e6877a8552")]
 [assembly: System.Reflection.AssemblyProductAttribute("DoAnCryptoWeb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DoAnCryptoWeb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

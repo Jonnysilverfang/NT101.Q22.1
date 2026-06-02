@@ -534,11 +534,31 @@
             <!-- Form parameters -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
               <div class="space-y-2">
-                <label for="filePublicKey" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Khóa công khai (Public Key) để MÃ HÓA</label>
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <label for="filePublicKey" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Khóa công khai (Public Key) để MÃ HÓA</label>
+                  <button id="btnImportFilePublicKey" type="button" class="px-3 py-1.5 bg-slate-950 hover:bg-cyan-950/40 border border-slate-800 hover:border-cyan-500 text-cyan-400 rounded-xl text-[11px] font-bold flex items-center gap-1.5 transition-all shadow-inner active:scale-[0.98]">
+                    <span class="material-symbols-outlined text-[16px]">upload_file</span>
+                    Import Public Key
+                  </button>
+                </div>
+                <input type="file" id="filePublicKeyImport" class="hidden" accept=".pem,.key,.pub,.txt">
                 <textarea id="filePublicKey" rows="4" class="terminal-textarea text-xs text-cyan-400 font-mono border-slate-800 bg-slate-950/80 rounded-xl" placeholder="-----BEGIN PUBLIC KEY-----"></textarea>
               </div>
               <div class="space-y-2">
-                <label for="filePrivateKey" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Khóa bí mật (Private Key) để GIẢI MÃ</label>
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <label for="filePrivateKey" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Khóa bí mật (Private Key) để GIẢI MÃ</label>
+                  <div class="flex flex-wrap gap-2">
+                    <button id="btnImportFilePrivateKey" type="button" class="px-3 py-1.5 bg-slate-950 hover:bg-purple-950/40 border border-slate-800 hover:border-purple-500 text-purple-400 rounded-xl text-[11px] font-bold flex items-center gap-1.5 transition-all shadow-inner active:scale-[0.98]">
+                      <span class="material-symbols-outlined text-[16px]">upload_file</span>
+                      Import Private Key
+                    </button>
+                    <button id="btnDownloadFilePrivateKey" type="button" class="px-3 py-1.5 bg-slate-950 hover:bg-purple-950/40 border border-slate-800 hover:border-purple-500 text-purple-400 rounded-xl text-[11px] font-bold flex items-center gap-1.5 transition-all shadow-inner active:scale-[0.98]">
+                      <span class="material-symbols-outlined text-[16px]">download</span>
+                      Download Private Key
+                    </button>
+                  </div>
+                </div>
+                <input type="file" id="filePrivateKeyImport" class="hidden" accept=".pem,.key,.txt">
                 <textarea id="filePrivateKey" rows="4" class="terminal-textarea text-xs text-purple-400 font-mono border-slate-800 bg-slate-950/80 rounded-xl" placeholder="-----BEGIN PRIVATE KEY-----"></textarea>
               </div>
             </div>
@@ -637,16 +657,6 @@
         </div>
       </div>
     </section>
-
-    <!-- FOOTER -->
-    <footer class="mt-auto pt-16 pb-8 border-t border-slate-900/60 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-medium z-10 relative">
-      <p>© 2026 CryptoLab. Tất cả dữ liệu tính toán được xử lý trực tiếp trên thiết bị đầu cuối và qua cổng API bảo mật.</p>
-      <div class="flex gap-5">
-        <a href="#" class="hover:text-slate-350 transition-colors">Tài liệu hướng dẫn</a>
-        <a href="#" class="hover:text-slate-350 transition-colors">API References</a>
-        <a href="#" class="hover:text-slate-350 transition-colors">Bảo mật</a>
-      </div>
-    </footer>
 
   </div>
 

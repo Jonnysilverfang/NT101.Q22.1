@@ -28,3 +28,41 @@ E:\O D\port\NT101.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\WinFormsApp1.gen
 E:\O D\port\NT101.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\ref\DoAnCryptoWeb.dll
 E:\O D\port\NT101.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\compressed\43x4iesna1-6bvdup0z2j.gz
 E:\O D\port\NT101.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\compressed\9l0xbutxwu-y8cr64zsea.gz
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\rpswa.dswa.cache.json
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\WinFormsApp1.GeneratedMSBuildEditorConfig.editorconfig
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\WinFormsApp1.AssemblyInfoInputs.cache
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\WinFormsApp1.AssemblyInfo.cs
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\WinFormsApp1.csproj.CoreCompileInputs.cache
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\DoAnCryptoWeb.MvcApplicationPartsAssemblyInfo.cache
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\WinFormsApp1.sourcelink.json
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\DoAnCryptoWeb.dll
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\refint\DoAnCryptoWeb.dll
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\DoAnCryptoWeb.pdb
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\bin\Debug\net9.0\DoAnCryptoWeb.staticwebassets.runtime.json
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\bin\Debug\net9.0\DoAnCryptoWeb.staticwebassets.endpoints.json
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\bin\Debug\net9.0\DoAnCryptoWeb.exe
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\bin\Debug\net9.0\DoAnCryptoWeb.deps.json
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\bin\Debug\net9.0\DoAnCryptoWeb.runtimeconfig.json
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\bin\Debug\net9.0\DoAnCryptoWeb.dll
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\bin\Debug\net9.0\DoAnCryptoWeb.pdb
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\rjimswa.dswa.cache.json
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\scopedcss\bundle\DoAnCryptoWeb.styles.css
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\compressed\fry50dbbbz-{0}-g693bvx5ed-g693bvx5ed.gz
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\staticwebassets.build.json
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\staticwebassets.build.json.cache
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\staticwebassets.development.json
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\staticwebassets.build.endpoints.json
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\swae.build.ex.cache
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\WinFormsApp1.genruntimeconfig.cache
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\ref\DoAnCryptoWeb.dll
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\compressed\wlgc0sdbmd-{0}-z2x7s5mwdp-z2x7s5mwdp.gz
+F:\atm\NT131.Q22.1\Đồ án\WinFormsApp1\obj\Debug\net9.0\compressed\p101fn4f2e-{0}-9x478s06ip-9x478s06ip.gz
+C:\tmp\doancrypto-build-check\DoAnCryptoWeb.staticwebassets.runtime.json
+C:\tmp\doancrypto-build-check\DoAnCryptoWeb.staticwebassets.endpoints.json
+C:\tmp\doancrypto-build-check\DoAnCryptoWeb.exe
+C:\tmp\doancrypto-build-check\DoAnCryptoWeb.deps.json
+C:\tmp\doancrypto-build-check\DoAnCryptoWeb.runtimeconfig.json
+C:\tmp\doancrypto-build-check\DoAnCryptoWeb.dll
+C:\tmp\doancrypto-build-check\DoAnCryptoWeb.pdb

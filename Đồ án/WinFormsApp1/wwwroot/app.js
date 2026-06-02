@@ -517,6 +517,8 @@ const fileInput = document.getElementById('fileInput');
 const fileDetails = document.getElementById('fileDetails');
 const detailsFileName = document.getElementById('detailsFileName');
 const detailsFileSize = document.getElementById('detailsFileSize');
+const filePublicKeyImport = document.getElementById('filePublicKeyImport');
+const filePrivateKeyImport = document.getElementById('filePrivateKeyImport');
 
 // Drag and drop events
 dropzone.addEventListener('click', () => fileInput.click());
@@ -555,6 +557,79 @@ document.getElementById('btnRemoveFile').addEventListener('click', (e) => {
   fileInput.value = "";
   fileDetails.classList.add('hidden');
 });
+
+document.getElementById('btnImportFilePublicKey').addEventListener('click', () => filePublicKeyImport.click());
+document.getElementById('btnImportFilePrivateKey').addEventListener('click', () => filePrivateKeyImport.click());
+document.getElementById('btnDownloadFilePrivateKey').addEventListener('click', downloadFilePrivateKey);
+
+filePublicKeyImport.addEventListener('change', () => {
+  importRsaKeyFile(filePublicKeyImport, 'public');
+});
+
+filePrivateKeyImport.addEventListener('change', () => {
+  importRsaKeyFile(filePrivateKeyImport, 'private');
+});
+
+function importRsaKeyFile(input, keyType) {
+  const selectedKeyFile = input.files && input.files[0];
+  if (!selectedKeyFile) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const keyContent = String(reader.result || '').trim();
+    const isPublicKey = keyType === 'public';
+    const expectedMarker = isPublicKey ? 'PUBLIC KEY' : 'PRIVATE KEY';
+
+    if (!keyContent.includes('BEGIN') || !keyContent.includes(expectedMarker)) {
+      alert(`File không giống khóa RSA ${isPublicKey ? 'công khai' : 'bí mật'} dạng PEM.`);
+      input.value = "";
+      return;
+    }
+
+    const fileKeyTarget = document.getElementById(isPublicKey ? 'filePublicKey' : 'filePrivateKey');
+    const rsaKeyTarget = document.getElementById(isPublicKey ? 'rsaPublicKey' : 'rsaPrivateKey');
+
+    fileKeyTarget.value = keyContent;
+    rsaKeyTarget.value = keyContent;
+    input.value = "";
+
+    alert(`Đã import ${isPublicKey ? 'Public Key' : 'Private Key'} từ file: ${selectedKeyFile.name}`);
+    addAuditLog("RSA", isPublicKey ? "Import Public Key" : "Import Private Key", keyContent.length, selectedKeyFile.name, "Import khóa PEM cho trang mã hóa file.");
+  };
+
+  reader.onerror = () => {
+    alert("Không thể đọc file khóa. Vui lòng thử lại với file PEM/TXT khác.");
+    input.value = "";
+  };
+
+  reader.readAsText(selectedKeyFile);
+}
+
+function downloadFilePrivateKey() {
+  const privateKey = document.getElementById('filePrivateKey').value.trim();
+  if (!privateKey) {
+    alert("Chưa có Private Key để tải xuống.");
+    return;
+  }
+
+  if (!privateKey.includes('BEGIN') || !privateKey.includes('PRIVATE KEY')) {
+    alert("Nội dung hiện tại không giống Private Key dạng PEM.");
+    return;
+  }
+
+  const blob = new Blob([privateKey + "\n"], { type: "application/x-pem-file;charset=utf-8" });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `rsa-private-key-${new Date().toISOString().slice(0, 10)}.pem`;
+
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+
+  addAuditLog("RSA", "Download Private Key", privateKey.length, "Private Key PEM", "Tải khóa bí mật RSA xuống máy để test.");
+}
 
 // Trigger Hybrid File Encryption
 document.getElementById('btnFileEncrypt').addEventListener('click', () => runFileAction('encrypt-file'));

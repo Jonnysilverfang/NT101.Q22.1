@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "O/sV/nZCdso=",
+  "dgSpecHash": "0b/vuQcg2W0=",
   "success": true,
-  "projectFilePath": "E:\\O D\\port\\NT101.Q22.1\\Đồ án\\WinFormsApp1\\WinFormsApp1.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "F:\\atm\\NT131.Q22.1\\Đồ án\\WinFormsApp1\\WinFormsApp1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Thinkpad X1\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.14\\microsoft.netcore.app.ref.9.0.14.nupkg.sha512",
+    "C:\\Users\\Thinkpad X1\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.14\\microsoft.windowsdesktop.app.ref.9.0.14.nupkg.sha512",
+    "C:\\Users\\Thinkpad X1\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.14\\microsoft.aspnetcore.app.ref.9.0.14.nupkg.sha512",
+    "C:\\Users\\Thinkpad X1\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\9.0.14\\microsoft.netcore.app.host.win-x64.9.0.14.nupkg.sha512"
+  ],
   "logs": []
 }

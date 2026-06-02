@@ -1,4 +1,5 @@
 using System.IO;
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -76,6 +77,200 @@ public static class CryptoService
         return new PlayfairDetailedResult(result, matrixOutput, steps);
     }
 
+    public static BigInteger ModInverse(BigInteger e, BigInteger m)
+    {
+        BigInteger m0 = m;
+        BigInteger y = 0, x = 1;
+
+        if (m == 1)
+            return 0;
+
+        while (e > 1)
+        {
+            BigInteger q = e / m;
+            BigInteger t = m;
+
+            m = e % m;
+            e = t;
+            t = y;
+
+            y = x - q * y;
+            x = t;
+        }
+
+        if (x < 0)
+            x += m0;
+
+        return x;
+    }
+
+    public static (string PublicKeyPem, string PrivateKeyPem) GenerateCustomRsaKeys(int keySize)
+    {
+        using RSA tempRsa = RSA.Create(keySize);
+        RSAParameters tempParams = tempRsa.ExportParameters(true);
+
+        BigInteger p = new BigInteger(tempParams.P!, isUnsigned: true, isBigEndian: true);
+        BigInteger q = new BigInteger(tempParams.Q!, isUnsigned: true, isBigEndian: true);
+
+        BigInteger n = p * q;
+        BigInteger phi = (p - 1) * (q - 1);
+        BigInteger e = 65537;
+        
+        BigInteger d = ModInverse(e, phi);
+
+        BigInteger dp = d % (p - 1);
+        BigInteger dq = d % (q - 1);
+        BigInteger inverseQ = ModInverse(q, p);
+
+        RSAParameters customParams = new RSAParameters
+        {
+            Modulus = n.ToByteArray(isUnsigned: true, isBigEndian: true),
+            Exponent = e.ToByteArray(isUnsigned: true, isBigEndian: true),
+            D = d.ToByteArray(isUnsigned: true, isBigEndian: true),
+            P = p.ToByteArray(isUnsigned: true, isBigEndian: true),
+            Q = q.ToByteArray(isUnsigned: true, isBigEndian: true),
+            DP = dp.ToByteArray(isUnsigned: true, isBigEndian: true),
+            DQ = dq.ToByteArray(isUnsigned: true, isBigEndian: true),
+            InverseQ = inverseQ.ToByteArray(isUnsigned: true, isBigEndian: true)
+        };
+
+        using RSA customRsa = RSA.Create();
+        customRsa.ImportParameters(customParams);
+
+        string publicKeyPem = customRsa.ExportRSAPublicKeyPem();
+        string privateKeyPem = customRsa.ExportRSAPrivateKeyPem();
+
+        return (publicKeyPem, privateKeyPem);
+    }
+
+    public static byte[] CustomRsaEncryptBytes(byte[] data, string publicKeyPem)
+    {
+        if (data == null)
+            throw new ArgumentNullException(nameof(data));
+
+        using RSA rsa = RSA.Create();
+        rsa.ImportFromPem(publicKeyPem);
+        RSAParameters rsaParams = rsa.ExportParameters(false);
+
+        BigInteger n = new BigInteger(rsaParams.Modulus!, isUnsigned: true, isBigEndian: true);
+        BigInteger e = new BigInteger(rsaParams.Exponent!, isUnsigned: true, isBigEndian: true);
+
+        int modulusSize = rsaParams.Modulus!.Length;
+        int blockSize = modulusSize - 1;
+
+        using MemoryStream ms = new();
+        using BinaryWriter writer = new(ms);
+
+        writer.Write(-1);
+        writer.Write(data.Length);
+
+        for (int i = 0; i < data.Length; i += blockSize)
+        {
+            int length = Math.Min(blockSize, data.Length - i);
+            byte[] block = new byte[length];
+            Array.Copy(data, i, block, 0, length);
+
+            BigInteger m = new BigInteger(block, isUnsigned: true, isBigEndian: true);
+            BigInteger c = BigInteger.ModPow(m, e, n);
+
+            byte[] cBytes = c.ToByteArray(isUnsigned: true, isBigEndian: true);
+            byte[] paddedC = new byte[modulusSize];
+            Array.Copy(cBytes, 0, paddedC, modulusSize - cBytes.Length, cBytes.Length);
+
+            writer.Write(length);
+            writer.Write(paddedC);
+        }
+
+        return ms.ToArray();
+    }
+
+    public static byte[] CustomRsaDecryptBytes(byte[] encryptedData, string privateKeyPem)
+    {
+        if (encryptedData == null)
+            throw new ArgumentNullException(nameof(encryptedData));
+
+        using RSA rsa = RSA.Create();
+        rsa.ImportFromPem(privateKeyPem);
+        RSAParameters rsaParams = rsa.ExportParameters(true);
+
+        BigInteger n = new BigInteger(rsaParams.Modulus!, isUnsigned: true, isBigEndian: true);
+        BigInteger d = new BigInteger(rsaParams.D!, isUnsigned: true, isBigEndian: true);
+
+        int modulusSize = rsaParams.Modulus!.Length;
+        int expectedBlockSize = modulusSize - 1;
+
+        using MemoryStream ms = new(encryptedData);
+        using BinaryReader reader = new(ms);
+
+        if (ms.Length < 4)
+        {
+            throw new InvalidOperationException("Dữ liệu mã hóa không hợp lệ (thiếu thông tin độ dài).");
+        }
+
+        int originalLength = reader.ReadInt32();
+        bool usesBlockLengths = originalLength == -1;
+        if (usesBlockLengths)
+        {
+            originalLength = reader.ReadInt32();
+        }
+
+        if (originalLength < 0)
+        {
+            throw new InvalidOperationException("Dữ liệu độ dài gốc không hợp lệ.");
+        }
+
+        List<byte> decryptedBytes = new();
+
+        while (ms.Position < ms.Length)
+        {
+            int plainBlockLength = expectedBlockSize;
+            if (usesBlockLengths)
+            {
+                plainBlockLength = reader.ReadInt32();
+                if (plainBlockLength <= 0 || plainBlockLength > expectedBlockSize)
+                {
+                    throw new InvalidOperationException("Kích thước khối bản rõ không hợp lệ.");
+                }
+            }
+            else
+            {
+                int remainingLength = originalLength - decryptedBytes.Count;
+                if (remainingLength <= 0)
+                {
+                    throw new InvalidOperationException("Dữ liệu mã hóa chứa khối dư không hợp lệ.");
+                }
+
+                plainBlockLength = Math.Min(expectedBlockSize, remainingLength);
+            }
+
+            byte[] block = reader.ReadBytes(modulusSize);
+            if (block.Length != modulusSize)
+            {
+                throw new InvalidOperationException("Kích thước khối dữ liệu mã hóa không hợp lệ.");
+            }
+
+            BigInteger c = new BigInteger(block, isUnsigned: true, isBigEndian: true);
+            BigInteger m = BigInteger.ModPow(c, d, n);
+
+            byte[] mBytes = m.ToByteArray(isUnsigned: true, isBigEndian: true);
+
+            byte[] paddedM = new byte[expectedBlockSize];
+            Array.Copy(mBytes, 0, paddedM, expectedBlockSize - mBytes.Length, mBytes.Length);
+
+            decryptedBytes.AddRange(paddedM.Skip(expectedBlockSize - plainBlockLength));
+        }
+
+        if (decryptedBytes.Count < originalLength)
+        {
+            throw new InvalidOperationException("Giải mã không đủ dữ liệu so với độ dài gốc.");
+        }
+
+        byte[] result = new byte[originalLength];
+        decryptedBytes.CopyTo(0, result, 0, originalLength);
+
+        return result;
+    }
+
     public static string RsaEncrypt(string plainText, string publicKeyPem)
     {
         if (string.IsNullOrWhiteSpace(plainText))
@@ -88,11 +283,8 @@ public static class CryptoService
             throw new InvalidOperationException("Nhập khóa công khai RSA.");
         }
 
-        using RSA rsa = RSA.Create();
-        rsa.ImportFromPem(publicKeyPem);
-
         byte[] source = Encoding.UTF8.GetBytes(plainText);
-        byte[] encrypted = rsa.Encrypt(source, RSAEncryptionPadding.OaepSHA256);
+        byte[] encrypted = CustomRsaEncryptBytes(source, publicKeyPem);
         return Convert.ToBase64String(encrypted);
     }
 
@@ -108,13 +300,11 @@ public static class CryptoService
             throw new InvalidOperationException("Nhập khóa bí mật RSA.");
         }
 
-        using RSA rsa = RSA.Create();
-        rsa.ImportFromPem(privateKeyPem);
-
         byte[] cipherBytes = Convert.FromBase64String(cipherTextBase64.Trim());
-        byte[] decrypted = rsa.Decrypt(cipherBytes, RSAEncryptionPadding.OaepSHA256);
+        byte[] decrypted = CustomRsaDecryptBytes(cipherBytes, privateKeyPem);
         return Encoding.UTF8.GetString(decrypted);
     }
+
 
     public static RsaKeyInspection InspectRsaKey(string pemKey)
     {
@@ -174,7 +364,6 @@ public static class CryptoService
             throw new InvalidOperationException("Cần nhập khóa công khai RSA của người nhận.");
         }
 
-        // 1. Generate random AES key (256-bit) and IV (12-byte GCM)
         byte[] aesKey = new byte[32];
         byte[] nonce = new byte[12];
         using (var rng = RandomNumberGenerator.Create())
@@ -183,7 +372,6 @@ public static class CryptoService
             rng.GetBytes(nonce);
         }
 
-        // 2. Encrypt file data using AES-GCM
         byte[] cipherText = new byte[fileData.Length];
         byte[] tag = new byte[16];
         using (var aesGcm = new AesGcm(aesKey, tagSizeInBytes: 16))
@@ -191,12 +379,8 @@ public static class CryptoService
             aesGcm.Encrypt(nonce, fileData, cipherText, tag);
         }
 
-        // 3. Encrypt AES key using RSA Public Key
-        using RSA rsa = RSA.Create();
-        rsa.ImportFromPem(publicKeyPem);
-        byte[] encryptedAesKey = rsa.Encrypt(aesKey, RSAEncryptionPadding.OaepSHA256);
+        byte[] encryptedAesKey = CustomRsaEncryptBytes(aesKey, publicKeyPem);
 
-        // 4. Assemble package: [Int32 key length] + [encrypted key] + [12 bytes IV] + [16 bytes tag] + [ciphertext]
         using MemoryStream ms = new();
         using (BinaryWriter writer = new(ms))
         {
@@ -238,12 +422,8 @@ public static class CryptoService
             byte[] tag = reader.ReadBytes(16);
             byte[] cipherText = reader.ReadBytes((int)(ms.Length - ms.Position));
 
-            // 1. Decrypt AES key with RSA Private Key
-            using RSA rsa = RSA.Create();
-            rsa.ImportFromPem(privateKeyPem);
-            byte[] aesKey = rsa.Decrypt(encryptedAesKey, RSAEncryptionPadding.OaepSHA256);
+            byte[] aesKey = CustomRsaDecryptBytes(encryptedAesKey, privateKeyPem);
 
-            // 2. Decrypt cipherText with AES key
             byte[] decryptedData = new byte[cipherText.Length];
             using (var aesGcm = new AesGcm(aesKey, tagSizeInBytes: 16))
             {
@@ -252,7 +432,7 @@ public static class CryptoService
 
             return decryptedData;
         }
-        catch (CryptographicException ex)
+        catch (Exception ex)
         {
             throw new InvalidOperationException("Giải mã thất bại. Vui lòng kiểm tra lại khóa bí mật RSA hoặc tính toàn vẹn của file.", ex);
         }
